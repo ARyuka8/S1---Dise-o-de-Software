@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mejores Prácticas de Diseño de Software</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --info: #17a2b8;
+            --transition: all 0.3s ease;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            animation: fadeIn 1s ease;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: var(--secondary);
+            font-size: 1.2rem;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            animation: slideUp 1s ease;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            animation: fadeIn 1s ease;
+            animation-fill-mode: backwards;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .card-content {
+            padding: 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card.active .card-content {
+            max-height: 1000px;
+        }
+
+        .card-content ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+
+        .card-content li {
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .card-content li:before {
+            content: "•";
+            color: var(--secondary);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        .icon {
+            transition: var(--transition);
+        }
+
+        .card.active .icon {
+            transform: rotate(180deg);
+        }
+
+        .highlight {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid var(--secondary);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 var(--radius) var(--radius) 0;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .principle-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .principle-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .principle-title {
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .principle-title span {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Tema oscuro */
+        .dark-mode {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a2530 100%);
+            color: #f5f5f5;
+        }
+
+        .dark-mode .card,
+        .dark-mode .intro,
+        .dark-mode header,
+        .dark-mode .principle-card {
+            background: #34495e;
+            color: #f5f5f5;
+        }
+
+        .dark-mode .card-header {
+            background: #1a2530;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    
+    <div class="container">
+        <header>
+            <h1>Diseño de Software</h1>
+            <p class="subtitle">Mejores prácticas y principios fundamentales</p>
+        </header>
+
+        <section class="intro">
+            <p>El diseño de software es el proceso de planificación de una solución informática. Su propósito principal es ayudar a los programadores a manejar la complejidad de los programas y disminuir el riesgo de errores. La calidad es el pilar central del diseño de software.</p>
+        </section>
+
+        <h2>Elementos del Diseño de Software</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Diseño de Datos</h3>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <p>Define la relación entre los elementos estructurales del programa.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Diseño Arquitectónico</h3>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <p>Describe la comunicación interna del software, con otros sistemas, y con usuarios y operadores.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Diseño de Interfaz</h3>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <p>Describe la interacción del sistema con el usuario.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Diseño a Nivel de Componente</h3>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <p>Una descripción procedimental de cada parte especificada en el diseño arquitectónico.</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>Principios de Arquitectura y Diseño</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Selección de Arquitectura</h3>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <p>Es crucial elegir una arquitectura adecuada que proporcione la funcionalidad y los atributos de calidad deseados.</p>
+                    <div class="highlight">
+                        <p>Los patrones arquitectónicos son soluciones generales y reutilizables para problemas comunes.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Modularidad y Acoplamiento Flexible</h3>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <p>Dividir un sistema grande en partes más pequeñas e independientes, con acoplamiento flexible.</p>
+                    <ul>
+                        <li>Diseñar cada componente con una función clara</li>
+                        <li>Limitar la interacción entre componentes</li>
+                        <li>Considerar arquitectura de microservicios</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Escalabilidad</h3>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <p>El software escalable debe gestionar más usuarios, transacciones o datos sin perder rendimiento.</p>
+                    <ul>
+                        <li>Enfocarse en escalado horizontal (añadir servidores)</li>
+                        <li>Planificar escalabilidad de base de datos</li>
+                        <li>Usar memoria caché para datos frecuentes</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Arquitectura Sin Estado</h3>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <p>Cada petición al servidor debe incluir toda la información necesaria.</p>
+                    <div class="highlight">
+                        <p>Los servidores no deben recordar interacciones pasadas, haciendo el sistema más resistente.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Tolerancia a Fallos</h3>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <p>Asegurar que el sistema funcione incluso cuando algunas partes fallen.</p>
+                    <ul>
+                        <li>Implementar disyuntores para peticiones a servicios fallidos</li>
+                        <li>Mecanismos de reintento y conmutación por error</li>
+                        <li>Redundancia y degradación gradual</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Optimización del Rendimiento</h3>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <p>Priorizar tiempos de carga rápidos e interacciones fluidas.</p>
+                    <ul>
+                        <li>Utilizar almacenamiento en caché (CDN, memoria)</li>
+                        <li>Optimizar consultas e indexación de bases de datos</li>
+                        <li>Racionalizar el código base</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div>
+                <h2>Principios GRASP</h2>
+                <div class="principles-grid">
+                    <div class="principle-card">
+                        <div class="principle-title"><span>💡</span> Experto en Información</div>
+                        <p>Asignar responsabilidad a la clase que tiene toda la información necesaria.</p>
+                    </div>
+                    <div class="principle-card">
+                        <div class="principle-title"><span>🛠️</span> Creador</div>
+                        <p>Identificar la clase responsable de la creación de nuevos objetos.</p>
+                    </div>
+                    <div class="principle-card">
+                        <div class="principle-title"><span>🎮</span> Controlador</div>
+                        <p>Intermediario entre la interfaz y el algoritmo, separando lógica de negocio de presentación.</p>
+                    </div>
+                    <div class="principle-card">
+                        <div class="principle-title"><span>🔗</span> Cohesión y Acoplamiento</div>
+                        <p>Minimizar dependencias entre clases y agrupar responsabilidades relacionadas.</p>
+                    </div>
+                    <div class="principle-card">
+                        <div class="principle-title"><span>🔄</span> Polimorfismo</div>
+                        <p>Usar polimorfismo cuando el comportamiento varía según el tipo.</p>
+                    </div>
+                    <div class="principle-card">
+                        <div class="principle-title"><span>🏭</span> Fabricación Pura</div>
+                        <p>Crear clases "inventadas" para mejorar la cohesión y el acoplamiento.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h2>Principios SOLID</h2>
+                <div class="principles-grid">
+                    <div class="principle-card">
+                        <div class="principle-title"><span>S</span> Responsabilidad Única</div>
+                        <p>Una clase debe tener solo una razón para cambiar.</p>
+                    </div>
+                    <div class="principle-card">
+                        <div class="principle-title"><span>O</span> Abierto-Cerrado</div>
+                        <p>Las clases deben estar abiertas a extensión pero cerradas a modificación.</p>
+                    </div>
+                    <div class="principle-card">
+                        <div class="principle-title"><span>L</span> Sustitución de Liskov</div>
+                        <p>Las subclases deben ser sustituibles por sus clases base.</p>
+                    </div>
+                    <div class="principle-card">
+                        <div class="principle-title"><span>I</span> Segregación de Interfaces</div>
+                        <p>Muchas interfaces específicas son mejores que una de propósito general.</p>
+                    </div>
+                    <div class="principle-card">
+                        <div class="principle-title"><span>D</span> Inversión de Dependencia</div>
+                        <p>Depender de abstracciones, no de implementaciones concretas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Metodologías y Procesos</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Metodologías Ágiles</h3>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <p>Adoptar metodologías como Scrum, Kanban o XP que impulsan la productividad mediante ciclos cortos y retroalimentación constante.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Enfoque de Diseño</h3>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <p>Adoptar un enfoque sólido desde las primeras etapas, incluyendo diseño centrado en el usuario y software modular.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Estándares de Codificación</h3>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <p>Aplicar estándares robustos que mejoren la calidad, fortalezcan colaboración y reduzcan costes de mantenimiento.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Pruebas Rigurosas</h3>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <p>Implementar pruebas unitarias, de integración, funcionales, automatizadas, de rendimiento y seguridad.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Infografía sobre mejores prácticas de diseño de software | Basado en el documento proporcionado</p>
+        </footer>
+    </div>
+
+    <script>
+        // Función para alternar tarjetas
+        function toggleCard(element) {
+            const card = element.parentElement;
+            card.classList.toggle('active');
+        }
+
+        // Abrir la primera tarjeta de cada sección por defecto
+        document.querySelectorAll('.grid').forEach(grid => {
+            const firstCard = grid.querySelector('.card');
+            if (firstCard) {
+                firstCard.classList.add('active');
+            }
+        });
+
+        // Función para alternar tema claro/oscuro
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const button = document.querySelector('.theme-toggle');
+            if (document.body.classList.contains('dark-mode')) {
+                button.textContent = '🌞';
+            } else {
+                button.textContent = '🌓';
+            }
+        }
+
+        // Animación de aparición gradual al hacer scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card, .principle-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'fadeIn 1s ease forwards';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            cards.forEach(card => {
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
